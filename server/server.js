@@ -22,9 +22,8 @@ mongoose
     // App start
     app.listen(port, () => {
       console.log(`Server running on port ${port}`);
-    });
-
-    console.log(`Mongodb Database Connected!`);
+      console.log(`Mongodb Database Connected!`);
+    });    
   })
   .catch((err) => {
     console.log(err);

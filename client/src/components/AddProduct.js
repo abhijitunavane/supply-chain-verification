@@ -77,7 +77,6 @@ class AddProduct extends React.Component {
     }
     this.setState({
       product_name: "",
-      product_brand: "",
       product_price: "",
       err: false
     });

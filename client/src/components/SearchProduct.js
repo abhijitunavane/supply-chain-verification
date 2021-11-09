@@ -94,7 +94,7 @@ class SearchProduct extends React.Component {
             product_brand: res.data.user.company_name,
           });
 
-          if (this.state.product_brand !== this.props.productFound[2]) {
+          if (this.props.productFound !== null && this.state.product_brand !== this.props.productFound[2]) {
             this.props.handleFoundNotFound();            
           }
           this.setState({
