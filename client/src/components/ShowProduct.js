@@ -8,8 +8,9 @@ class ShowProduct extends React.Component {
   }
   componentDidMount() {
     console.log("ShowProduct Mounted ");
-    // console.log("sdad", JSON.parse(this.props.product));
-    if (this.ShowProductRef.current) {
+    // console.log(this.props.product, this.props.productNotFound);
+
+    if (this.ShowProductRef.current) {      
       this.ShowProductRef.current.scrollIntoView({
         behavior: "smooth",
       });
@@ -35,7 +36,9 @@ class ShowProduct extends React.Component {
               </tr>
             </thead>
             <tbody className="text-center">
-              <RenderProducts product={this.props.product} />
+              {this.props.product && (
+                <RenderProducts product={this.props.product} />
+              )}
             </tbody>
           </table>
         )}

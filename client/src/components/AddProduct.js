@@ -106,7 +106,7 @@ class AddProduct extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner text="loading" />
+      return <Spinner text="Loading" />
     } 
     return (
       <div className="container my-3 bg-light p-2 ">

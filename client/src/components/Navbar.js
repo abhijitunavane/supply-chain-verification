@@ -42,6 +42,11 @@ class Navbar extends React.Component {
                   Search Product
                 </NavLink>
               </li></>:null }
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/customer">
+                  Customer
+                </NavLink>
+              </li>
             </ul>
           </div>
         </div>

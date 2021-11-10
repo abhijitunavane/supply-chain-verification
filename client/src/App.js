@@ -21,6 +21,7 @@ import SearchProduct from "./components/SearchProduct";
 import Spinner from "./components/Spinner";
 import Footer from "./components/Footer";
 import ScrollButton from "./helpers/ScrollButton";
+import Customer from "./components/Customer";
 
 class App extends Component {
   constructor(props) {
@@ -69,7 +70,7 @@ class App extends Component {
       if (loggedInUser) {
         this.setState({
           user: loggedInUser,
-        });        
+        });
       }
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -196,10 +197,11 @@ class App extends Component {
     this.setState({
       user: event,
     });
-  } 
+  }
 
   render() {
-    if (!this.state.web3) {
+    if (!this.state.web3 && localStorage.getItem("user") === this.state.user) {
+      console.log(this.state.user);
       return (
         <div>
           <Spinner text="Loading Web3, accounts, and contract..." />
@@ -232,7 +234,9 @@ class App extends Component {
                   />
                 </Route>
               ) : (
-                <Redirect exact to="/manufacturer" />
+                <Route path="/manufacturer/addproduct">
+                  <Spinner text="Loading" />
+                </Route>
               )}
               {this.state.user ? (
                 <Route path="/manufacturer/searchproduct">
@@ -246,10 +250,20 @@ class App extends Component {
                   />
                 </Route>
               ) : (
-                <Redirect exact to="/manufacturer" />
+                <Route path="/manufacturer/searchproduct">
+                  <Spinner text="Loading" />
+                </Route>
               )}
-            </Switch>          
-            <Footer />    
+
+              <Route exact path="/customer">
+                <Customer 
+                handleSearchProductById={this.handleSearchProductById}
+                productFound={this.state.productFound}
+                productNotFound={this.state.productNotFound}
+                />
+              </Route>
+            </Switch>
+            <Footer />
             <ScrollButton />
           </div>
         </Router>
