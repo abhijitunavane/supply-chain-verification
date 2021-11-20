@@ -24,6 +24,15 @@ class Customer extends React.Component {
     this.handleScan = this.handleScan.bind(this);
     this.handleError = this.handleError.bind(this);
   }
+
+  componentWillUnmount() {
+    navigator.mediaDevices
+      .getUserMedia({ audio: false, video: true })
+      .then((mediaStream) => {
+        mediaStream.getTracks().forEach((track) => track.stop());
+      });
+  }
+
   handleScan(result) {
     try {
       if (result) {
@@ -45,7 +54,7 @@ class Customer extends React.Component {
   handleError(error) {
     console.log(`Error: ${error}`);
   }
-  render() {    
+  render() {
     return (
       <div className="container row d-flex mx-auto my-3">
         <div className="col-md-6 d-flex flex-column justify-content-center">
