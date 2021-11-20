@@ -1,8 +1,23 @@
 import React from "react";
 import axios from "axios";
+import NodeRSA from "node-rsa";
 import ShowProduct from "./ShowProduct";
 import QRModal from "./../helpers/QRModal";
 import Spinner from "./Spinner";
+import _private from "../keys/private.js";
+import $ from "jquery";
+import JSEncrypt from 'jsencrypt';
+
+window.jQuery = $;
+window.$ = $;
+global.jQuery = $;
+
+function CheckValidity(license) {
+  var _decrypt = new JSEncrypt();
+  _decrypt.setPrivateKey(_private);
+  var decrypted = _decrypt.decrypt(license);
+  return decrypted;
+}
 
 class SearchProduct extends React.Component {
   constructor(props) {
@@ -12,7 +27,7 @@ class SearchProduct extends React.Component {
       searchQuery: "",
       scannedResult: null,
       showModal: false,
-      product_brand: null
+      product_brand: null,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,8 +43,8 @@ class SearchProduct extends React.Component {
   componentWillUnmount() {
     this.props.setProductFoundDefault();
     this.setState({
-      scannedResult: null
-    })
+      scannedResult: null,
+    });
   }
   handleChange(event) {
     this.setState({
@@ -38,27 +53,24 @@ class SearchProduct extends React.Component {
   }
   handleSubmit(event) {
     event.preventDefault();
-    this.props.handleSearchProductById(this.state.searchQuery);
-    if (this.props.productFound) {
-      this.handleUserDetails();
-    }
+    this.props.handleSearchProductById(this.state.searchQuery);    
+    this.handleUserDetails();    
   }
 
   handleError(error) {
     console.log(`Error: ${error}`);
   }
-  handleScan(result) {
+  handleScan(result, hideModal) {
+    this.props.handleFoundNotFound();
     try {
       if (result) {
+        hideModal();
+        result = CheckValidity(result);
         result = JSON.parse(result);
+                
         this.props.handleSearchProductById(result.product_id);
-        if (this.props.productFound) {
-          this.handleUserDetails(); 
-          
-          this.setState({
-            scannedResult: this.props.productFound,
-          });
-      }
+        
+        this.handleUserDetails();                
       }
     } catch (err) {
       console.log("Error!", err);
@@ -76,6 +88,7 @@ class SearchProduct extends React.Component {
   handleModalCloseClick() {
     this.setState({
       showModal: false,
+      loading: false,
     });
   }
 
@@ -94,8 +107,11 @@ class SearchProduct extends React.Component {
             product_brand: res.data.user.company_name,
           });
 
-          if (this.props.productFound !== null && this.state.product_brand !== this.props.productFound[2]) {
-            this.props.handleFoundNotFound();            
+          if (
+            this.props.productFound !== null &&
+            this.state.product_brand !== this.props.productFound[2]
+          ) {
+            this.props.handleFoundNotFound();
           }
           this.setState({
             loading: false,
@@ -109,7 +125,7 @@ class SearchProduct extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner text="Searching" />
+      return <Spinner text="Searching" />;
     }
     return (
       <div className="container my-3 p-2 bg-light min-vh-100 ">

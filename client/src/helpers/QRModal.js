@@ -6,10 +6,26 @@ window.$ = $;
 global.jQuery = $;
 
 class QRModal extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleScan = this.handleScan.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+  }
   componentDidMount() {
     const { handleModalCloseClick } = this.props;
     $(this.modal).modal("show");
     $(this.modal).on("hidden.bs.modal", handleModalCloseClick);
+  }
+  hideModal() {
+    console.log("Hide");
+    $(this.modal).modal("hide");
+    $(this.modal).on("hidden.bs.modal", this.props.handleModalCloseClick);
+    $('.modal-backdrop').remove();
+  }
+
+  handleScan(result) {
+    this.props.handleScan(result, this.hideModal);
   }
 
   render() {
@@ -39,10 +55,9 @@ class QRModal extends React.Component {
               </div>
               <div className="modal-body">
                 <QrReader
-                  className="border border-success border-3"
-                  delay={300}
+                  className="border border-success border-3"                  
                   onError={this.props.handleError}
-                  onScan={this.props.handleScan}
+                  onScan={this.handleScan}
                   style={{ width: "100%" }}
                 />
               </div>

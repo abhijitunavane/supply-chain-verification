@@ -1,6 +1,16 @@
 import React from "react";
 import QrReader from "react-qr-reader";
 import ShowProduct from "./ShowProduct";
+import NodeRSA from "node-rsa";
+import _private from "../keys/private.js";
+import JSEncrypt from "jsencrypt";
+
+function CheckValidity(license) {
+  var _decrypt = new JSEncrypt();
+  _decrypt.setPrivateKey(_private);
+  var decrypted = _decrypt.decrypt(license);
+  return decrypted;
+}
 
 class Customer extends React.Component {
   constructor(props) {
@@ -17,6 +27,7 @@ class Customer extends React.Component {
   handleScan(result) {
     try {
       if (result) {
+        result = CheckValidity(result);
         result = JSON.parse(result);
         this.props.handleSearchProductById(result.product_id);
         if (this.props.productFound) {
@@ -34,8 +45,7 @@ class Customer extends React.Component {
   handleError(error) {
     console.log(`Error: ${error}`);
   }
-  render() {
-    // if (this.state.scannedResult) console.log(this.state.scannedResult);
+  render() {    
     return (
       <div className="container row d-flex mx-auto my-3">
         <div className="col-md-6 d-flex flex-column justify-content-center">

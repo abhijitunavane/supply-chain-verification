@@ -1,6 +1,17 @@
 import React from 'react';
 import QRCode from "qrcode";
 
+import JSEncrypt from 'jsencrypt';
+import _public from "../keys/public.js";
+
+var encrypt = new JSEncrypt();
+encrypt.setPublicKey(_public);
+
+function CreateEncryptedQRCode(text) {
+  const encrypted = encrypt.encrypt(text);
+  return encrypted;
+}
+
 const RenderProducts = (props) => {
     const product = props.product;
     const productJsonObj = {
@@ -10,9 +21,12 @@ const RenderProducts = (props) => {
       product_price: product[3],
       product_manufacturing_date: new Date(product[4] * 1000).toString(),
     };
+    
+    var productDetails = CreateEncryptedQRCode(JSON.stringify(productJsonObj, null, 2));    
+
     var imageUrl;
     QRCode.toDataURL(
-      JSON.stringify(productJsonObj, null, 2),
+      productDetails,
       function (err, url) {
         imageUrl = url;
         return url;
