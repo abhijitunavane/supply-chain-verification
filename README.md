@@ -1,4 +1,4 @@
-# supply-chain-verification
+# Supply Chain Verification
 
 ## Project's Motive
 
