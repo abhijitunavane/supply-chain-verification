@@ -1,7 +1,6 @@
 import React from "react";
 import QrReader from "react-qr-reader";
 import ShowProduct from "./ShowProduct";
-import NodeRSA from "node-rsa";
 import _private from "../keys/private.js";
 import JSEncrypt from "jsencrypt";
 
